@@ -3,10 +3,12 @@ import { useState } from 'react';
 
 import { Event } from '../types';
 import { createNotificationMessage, getUpcomingEvents } from '../utils/notificationUtils';
+import {useAtom} from "jotai/index";
+import {notificationsAtom, notifiedEventsAtom} from "../stores/stores.ts";
 
 export const useNotifications = (events: Event[]) => {
-  const [notifications, setNotifications] = useState<{ id: string; message: string }[]>([]);
-  const [notifiedEvents, setNotifiedEvents] = useState<string[]>([]);
+  const [notifications, setNotifications] = useAtom(notificationsAtom);
+  const [notifiedEvents, setNotifiedEvents] = useAtom(notifiedEventsAtom);
 
   const checkUpcomingEvents = () => {
     const now = new Date();

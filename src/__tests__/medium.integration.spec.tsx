@@ -3,6 +3,7 @@ import {render, screen, within, act, queryByText, waitFor} from '@testing-librar
 import { UserEvent, userEvent } from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import { ReactElement } from 'react';
+import { Provider } from 'jotai';
 
 import App from '../App';
 import { server } from '../setupTests';
@@ -470,7 +471,7 @@ describe('일정 충돌', () => {
       })
     );
     
-    render(<ChakraProvider><App /></ChakraProvider>);
+    render(<ChakraProvider><Provider><App /></Provider></ChakraProvider>);
     const user = userEvent.setup();
     
     // 겹치는 시간에 새 일정 입력
@@ -566,7 +567,7 @@ it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트
   const tenMinutesBefore = new Date(eventDateTime.getTime() - 10 * 60 * 1000);
   vi.setSystemTime(tenMinutesBefore);
   
-  render(<ChakraProvider><App /></ChakraProvider>);
+  render(<ChakraProvider><Provider><App /></Provider></ChakraProvider>);
   
   // 이벤트 항목이 표시될 때까지 대기
   const eventItem = await screen.findByTestId('event-item-1');
@@ -574,7 +575,7 @@ it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트
   
   // 알림 메시지 확인
   const alerts = await screen.findAllByRole('alert');
-  expect(alerts[0]).toHaveTextContent('10분');
+  expect(alerts[0]).toHaveTextContent('10분 후');
   
   // 이벤트 리스트에서 알림 상태 표시 확인
   const eventTitle = screen.getByTestId('event-title-1');

@@ -2,9 +2,11 @@ import { useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 
 import { Event, EventForm } from '../types';
+import {useAtom} from "jotai/index";
+import {eventsAtom} from "../stores/stores.ts";
 
 export const useEventOperations = (editing: boolean, onSave?: () => void) => {
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useAtom<Event[]>(eventsAtom);
   const toast = useToast();
 
   const fetchEvents = async () => {
