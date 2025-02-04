@@ -26,6 +26,7 @@ import {
 import {useAtomValue} from "jotai";
 import {ChangeEvent, useRef} from "react";
 import {findOverlappingEvents} from "../../utils/eventOverlap.ts";
+import {useEventOperations} from "../../hooks/useEventOperations.ts";
 
 export default function ScheduleForm() {
   const [title, setTitle] = useAtom(titleAtom);
@@ -44,10 +45,11 @@ export default function ScheduleForm() {
   const [{ startTimeError, endTimeError }, setTimeError] = useAtom(timeErrorAtom);
   const [isOverlapDialogOpen, setIsOverlapDialogOpen] = useAtom(isOverlapDialogOpenAtom);
   const [overlappingEvents, setOverlappingEvents] = useAtom(overlappingEventsAtom);
-  const cancelRef = useRef<HTMLButtonElement>(null);
   const [events, setEvents] = useAtom<Event[]>(eventsAtom);
   const toast = useToast();
-  
+  const { saveEvent } = useEventOperations(Boolean(editingEvent), () =>
+    setEditingEvent(null)
+  );
   
   const addOrUpdateEvent = async () => {
     if (!title || !date || !startTime || !endTime) {
