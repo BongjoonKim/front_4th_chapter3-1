@@ -5,7 +5,6 @@ import {useCalendarView} from "../../../hooks/useCalendarView.ts";
 import {weekDays} from "../../../utils/constants.ts";
 import {useSearch} from "../../../hooks/useSearch.ts";
 import {useEventOperations} from "../../../hooks/useEventOperations.ts";
-import {useEventForm} from "../../../hooks/useEventForm.ts";
 import {useNotifications} from "../../../hooks/useNotifications.ts";
 import {useAtom} from "jotai/index";
 import {editingEventAtom} from "../../../stores/stores.ts";

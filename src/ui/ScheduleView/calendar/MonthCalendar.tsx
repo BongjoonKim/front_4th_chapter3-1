@@ -12,7 +12,6 @@ import {editingEventAtom} from "../../../stores/stores.ts";
 export default function MonthCalendar() {
   const { currentDate, view, holidays } = useCalendarView();
   const [editingEvent, setEditingEvent] = useAtom(editingEventAtom);
-  
   const { events } = useEventOperations(Boolean(editingEvent), () =>
     setEditingEvent(null)
   );

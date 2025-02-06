@@ -24,10 +24,20 @@ function filterEventsByDateRangeAtWeek(events: Event[], currentDate: Date) {
   return filterEventsByDateRange(events, weekDates[0], weekDates[6]);
 }
 
+// 날짜 범위를 알려주는 함수 (봉준 made)
+const getMonthRange = (date) => {
+  const startMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+  const endMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59);
+  
+  return {
+    startMonth,
+    endMonth
+  };
+};
+
 function filterEventsByDateRangeAtMonth(events: Event[], currentDate: Date) {
-  const monthStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-  const monthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-  return filterEventsByDateRange(events, monthStart, monthEnd);
+  const {startMonth, endMonth} = getMonthRange(currentDate);
+  return filterEventsByDateRange(events, startMonth, endMonth);
 }
 
 export function getFilteredEvents(

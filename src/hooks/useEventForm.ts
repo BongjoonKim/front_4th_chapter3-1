@@ -16,6 +16,7 @@ import {
 
 type TimeErrorRecord = Record<'startTimeError' | 'endTimeError', string | null>;
 
+// 더 이상 사용하지 않는 훅입니다.
 export const useEventForm = (initialEvent?: Event) => {
   const [title, setTitle] = useAtom(titleAtom);
   const [date, setDate] = useAtom(dateAtom);
@@ -42,21 +43,6 @@ export const useEventForm = (initialEvent?: Event) => {
     const newEndTime = e.target.value;
     setEndTime(newEndTime);
     setTimeError(getTimeErrorMessage(startTime, newEndTime));
-  };
-
-  const resetForm = () => {
-    setTitle('');
-    setDate('');
-    setStartTime('');
-    setEndTime('');
-    setDescription('');
-    setLocation('');
-    setCategory('');
-    setIsRepeating(false);
-    setRepeatType('none');
-    setRepeatInterval(1);
-    setRepeatEndDate('');
-    setNotificationTime(10);
   };
 
   const editEvent = (event: Event) => {
@@ -106,7 +92,6 @@ export const useEventForm = (initialEvent?: Event) => {
     setEditingEvent,
     handleStartTimeChange,
     handleEndTimeChange,
-    resetForm,
     editEvent,
   };
 };

@@ -8,7 +8,6 @@ describe('초기 상태', () => {
   // 실제 Date 객체를 저장
   //
   const mockDate = new Date('2024-10-01T09:00:00+09:00'); // 2024년 10월 01일
-  console.log("오늘 날짜", mockDate)
   let data ;
   
   beforeEach(() => {

@@ -45,12 +45,9 @@ export const setupMockHandlerUpdating = (initEvents = [] as Event[]) => {
   
   return {
     handler: async ({ request, params }: { request: Request; params: { id: string } }) => {
-      console.log("request", request);
-      console.log("params", params)
       try {
         const eventData: EventForm = await request.json();
         const eventId = params.id;
-        
         const eventIndex = events.findIndex(event => event.id === eventId);
         
         if (eventIndex === -1) {

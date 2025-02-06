@@ -16,6 +16,7 @@ export const useEventOperations = (editing: boolean, onSave?: () => void) => {
         throw new Error('Failed to fetch events');
       }
       const { events } = await response.json();
+      console.log("events", events)
       setEvents(events || []);
     } catch (error) {
       console.error('Error fetching events:', error);

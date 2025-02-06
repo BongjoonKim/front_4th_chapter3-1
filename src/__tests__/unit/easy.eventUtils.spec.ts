@@ -84,7 +84,7 @@ describe('getFilteredEvents', () => {
   beforeEach(() => {
     // 테스트에서 사용할 한국 시간대 설정
     vi.useFakeTimers();
-    vi.setSystemTime(new Date('2024-07-01T00:00:00+09:00'));
+    vi.setSystemTime(new Date('2024-07-01'));
   });
   
   afterEach(() => {
@@ -145,23 +145,23 @@ describe('getFilteredEvents', () => {
     const borderEvents: Event[] = [
       {
         ...mockEvents[0],
-        date: '2024-06-30T00:00:00+09:00'
+        date: '2024-06-30'
       },
       {
         ...mockEvents[1],
-        date: '2024-07-01T00:00:00+09:00'
+        date: '2024-07-01'
       },
       {
         ...mockEvents[2],
-        date: '2024-07-31T00:00:00+09:00'
+        date: '2024-07-31'
       }
     ];
-    
-    const currentDate = new Date('2024-07-01T00:00:00+09:00');
+    console.log("new Date", new Date('2024-07-01'))
+    const currentDate = new Date('2024-07-01');
     const result = getFilteredEvents(borderEvents, '', currentDate, 'month');
     
     expect(result).toHaveLength(2);
-    expect(result.map(event => event.date)).toEqual(['2024-07-01T00:00:00+09:00', '2024-07-31T00:00:00+09:00']);
+    expect(result.map(event => event.date)).toEqual(['2024-07-01', '2024-07-31']);
   });
 
   it('빈 이벤트 리스트에 대해 빈 배열을 반환한다', () => {

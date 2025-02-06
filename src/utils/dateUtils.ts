@@ -1,5 +1,10 @@
 import { Event } from '../types.ts';
 
+type WeekInfo = {
+  year: number;
+  month: number;
+  weekNumber: number;
+};
 /**
  * 주어진 년도와 월의 일수를 반환합니다.
  */
@@ -55,23 +60,41 @@ export function getEventsForDay(events: Event[], date: number): Event[] {
   return events.filter((event) => new Date(event.date).getDate() === date);
 }
 
-export function formatWeek(targetDate: Date) {
-  const dayOfWeek = targetDate.getDay();
-  const diffToThursday = 4 - dayOfWeek;
-  const thursday = new Date(targetDate);
-  thursday.setDate(targetDate.getDate() + diffToThursday);
 
+// 날짜로부터 해당 주의 목요일을 구하는 순수 함수 (봉준 made)
+function getThursdayOfWeek(date: Date): Date {
+  const thursday = new Date(date.getTime());
+  const dayOfWeek = date.getDay();
+  const diffToThursday = 4 - dayOfWeek;
+  thursday.setDate(date.getDate() + diffToThursday);
+  return thursday;
+}
+
+// 해당 월의 첫 번째 목요일을 구하는 순수 함수 (봉준 made)
+function getFirstThursdayOfMonth(year: number, month: number): Date {
+  const firstDayOfMonth = new Date(year, month, 1);
+  const firstThursday = new Date(firstDayOfMonth.getTime());
+  firstThursday.setDate(1 + ((4 - firstDayOfMonth.getDay() + 7) % 7));
+  return firstThursday;
+}
+
+// 주차 정보를 계산하는 순수 함수 (봉준 made)
+function calculateWeekInfo(date: Date): WeekInfo {
+  const thursday = getThursdayOfWeek(date);
   const year = thursday.getFullYear();
   const month = thursday.getMonth() + 1;
+  const firstThursday = getFirstThursdayOfMonth(year, thursday.getMonth());
+  
+  const weekNumber = Math.floor(
+    (thursday.getTime() - firstThursday.getTime()) / (7 * 24 * 60 * 60 * 1000)
+  ) + 1;
+  
+  return { year, month, weekNumber };
+}
 
-  const firstDayOfMonth = new Date(thursday.getFullYear(), thursday.getMonth(), 1);
-
-  const firstThursday = new Date(firstDayOfMonth);
-  firstThursday.setDate(1 + ((4 - firstDayOfMonth.getDay() + 7) % 7));
-
-  const weekNumber: number =
-    Math.floor((thursday.getTime() - firstThursday.getTime()) / (7 * 24 * 60 * 60 * 1000)) + 1;
-
+// 포매팅 함수
+export function formatWeek(date: Date): string {
+  const { year, month, weekNumber } = calculateWeekInfo(date);
   return `${year}년 ${month}월 ${weekNumber}주`;
 }
 

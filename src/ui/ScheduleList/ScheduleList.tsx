@@ -8,6 +8,7 @@ import {Event} from "../../types.ts";
 import {editingEventAtom, eventsAtom, notifiedEventsAtom} from "../../stores/stores.ts";
 import {useEventOperations} from "../../hooks/useEventOperations.ts";
 import {useEventForm} from "../../hooks/useEventForm.ts";
+import useSchedule from "../../hooks/schedule/useSchedule.ts";
 
 export default function ScheduleList() {
   const [events, setEvents] = useAtom<Event[]>(eventsAtom);
@@ -18,8 +19,7 @@ export default function ScheduleList() {
   const {  deleteEvent } = useEventOperations(Boolean(editingEvent), () =>
     setEditingEvent(null)
   );
-  const {editEvent,
-    } = useEventForm();
+  const {editEvent} = useSchedule();
   
   return (
     <VStack data-testid="event-list" w="500px" h="full" overflowY="auto">
