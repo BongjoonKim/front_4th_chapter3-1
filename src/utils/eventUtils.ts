@@ -26,7 +26,7 @@ function filterEventsByDateRangeAtWeek(events: Event[], currentDate: Date) {
 
 // 날짜 범위를 알려주는 함수 (봉준 made)
 const getMonthRange = (date) => {
-  const startMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+  const startMonth = new Date(date.getFullYear(), date.getMonth(), 1, 0, 0, 0);
   const endMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59);
   
   return {

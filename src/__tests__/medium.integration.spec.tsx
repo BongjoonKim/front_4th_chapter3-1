@@ -278,52 +278,68 @@ describe('일정 뷰', () => {
     await user.selectOptions(viewSelect, 'month');
     
     // 월별 뷰 컨테이너 찾기
-    const monthView = screen.getByTestId('month-view');
+    const monthView = await screen.findByTestId('month-view');
+    
+    // 디버깅용 출력
+    screen.debug(monthView);
     
     // 월별 뷰 헤더에 2024년 2월이 표시되는지 확인
     expect(within(monthView).getByText(/2024년 2월/)).toBeInTheDocument();
     
-    // 일정이 정확히 표시되는지 확인
-    expect(within(monthView).getByText('테스트 회의')).toBeInTheDocument();
-    
-    // 15일 칸에 일정이 표시되는지 확인
-    const dayCell = within(monthView)
-      .getAllByRole('cell')
-      .find(cell => within(cell).queryByText('15') !== null);
-    expect(dayCell).toBeDefined();
-    expect(within(dayCell!).getByText('테스트 회의')).toBeInTheDocument();
-    
+    // 15일이 있는 셀을 찾고 그 안에 일정이 있는지 확인
+    await waitFor(async () => {
+      const cells = within(monthView).getAllByRole('cell');
+      const dayCell = cells.find(cell => within(cell).queryByText('15') !== null);
+      expect(dayCell).toBeDefined();
+      
+      // 디버깅용 출력
+      if (dayCell) {
+        console.log('15일 셀의 내용:', dayCell.innerHTML);
+      }
+      
+      const eventText = within(dayCell!).getByText('테스트 회의');
+      expect(eventText).toBeInTheDocument();
+    });
   });
 
   it('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {
-    // 1월 1일 테스트를 위해 시스템 시간 변경
     vi.setSystemTime(new Date('2024-01-01T00:00:00+09:00'));
     
     server.use(
       http.get('/api/events', () => {
-        return HttpResponse.json({ events: [] });
+        return HttpResponse.json({events: []});
       })
     );
     
-    render(<ChakraProvider><App /></ChakraProvider>);
+    render(<ChakraProvider><App/></ChakraProvider>);
     const user = userEvent.setup();
     
     // 월별 뷰 선택
-    const viewSelect = screen.getByRole('combobox', { name: 'view' });
+    const viewSelect = screen.getByRole('combobox', {name: 'view'});
     await user.selectOptions(viewSelect, 'month');
     
-    // 월별 뷰 내에서 1일이 있는 셀 찾기
-    const monthView = screen.getByTestId('month-view');
-    const firstDayCell = within(monthView)
-      .getAllByRole('cell')
-      .find(cell => within(cell).queryByText('1') !== null);
+    // 월별 뷰 찾기
+    const monthView = await screen.findByTestId('month-view');
     
-    // 신정이 표시되는지 확인
-    expect(firstDayCell).toBeDefined();
-    const holidayText = within(firstDayCell!).getByText('신정');
-    expect(holidayText).toBeInTheDocument();
-    expect(holidayText).toHaveStyle({ color: 'var(--chakra-colors-red-500)' }); // 공휴일 글자색이 빨간색인지 확인
+    // 디버깅을 위한 출력
+    screen.debug(monthView);
     
+    await waitFor(async () => {
+      const firstDayCell = within(monthView)
+        .getAllByRole('cell')
+        .find(cell => within(cell).queryByText('1') !== null);
+      
+      expect(firstDayCell).toBeDefined();
+      
+      // 디버깅을 위해 셀의 내용 출력
+      if (firstDayCell) {
+        console.log('1일 셀의 내용:', firstDayCell.innerHTML);
+      }
+      
+      const holidayText = within(firstDayCell!).getByText('신정');
+      expect(holidayText).toBeInTheDocument();
+      expect(holidayText).toHaveStyle({color: 'var(--chakra-colors-red-500)'});
+    });
   });
 });
 
